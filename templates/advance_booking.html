@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spot Booking</title>
+    <link rel="stylesheet" href="path/to/style.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            padding-top: 100px; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .work_reg_button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+        }
+        .work_reg_button:hover {background-color: #3e8e41}
+        .work_reg_button:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    </style>
+
+<style>
+    form {
+        margin: 20px;
+    }
+    label, select {
+        margin: 10px 0;
+        display: block;
+    }
+    button {
+        margin: 10px 5px;
+        padding: 10px 15px;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+    <link rel="stylesheet" href="/static/css/user_style.css">
+    <script src="/static/js/user_script.js" defer></script>
+</head>
+<body>
+    {% include 'headers.html' %}
+    <div class="container">
+        <h1>Advance Booking</h1>
+        <p>User ID: {{ user_id }}</p>
+        <!-- Add your spot booking form or content here -->
+
+        <div>
+            <form id="searchForm">
+                <label for="state">State:</label>
+                <select name="state" id="state">
+                    {% for state in states %}
+                    <option value="{{ state }}">{{ state }}</option>
+                    {% endfor %}
+                </select>
+                <label for="city">City:</label>
+                <select name="city" id="city">
+                    {% for city in cities %}
+                    <option value="{{ city }}">{{ city }}</option>
+                    {% endfor %}
+                </select>
+                <label for="worker_type">Worker Type:</label>
+                <select name="worker_type" id="worker_type">
+                    {% for worker_type in worker_types %}
+                    <option value="{{ worker_type }}">{{ worker_type }}</option>
+                    {% endfor %}
+                </select>
+                <div id="dateInput" class="date-input">
+                   <label for="booking_date">Booking Date:</label>
+                   <input type="date" id="booking_date" name="booking_date">
+               </div>
+               <button type="button" onclick="searchWorkers()">Search</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="searchResultsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('searchResultsModal')">&times;</span>
+            <h2>Available Workers</h2>
+            <div id="searchResults"></div>
+        </div>
+    </div>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+            <h2>Booking Request</h2>
+            <p>Worker ID: <span id="worker_id_display"></span></p>
+            <p>User Details: <span id="user_details"></span></p>
+            <button type="button" onclick="sendBookingRequest()">Send Request</button>
+        </div>
+    </div>
+
+    
+    <div id="searchResultsModal" style="display: none;">
+        <div id="searchResults"></div>
+    </div>
+    <div id="bookingModal" style="display: none;">
+        <p id="worker_id_display"></p>
+        <p id="user_details"></p>
+        <button type="button" onclick="sendBookingRequest()">Send Booking Request</button>
+        <button type="button" onclick="closeModal('bookingModal')">Close</button>
+    </div>
+
+    <script>
+        function searchWorkers() {
+            const form = document.getElementById('searchForm');
+            const formData = new FormData(form);
+            fetch('/workers', {  // Make sure this URL matches your Flask route
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Received data:', data); // Log data for debugging
+                const searchResults = document.getElementById('searchResults');
+                searchResults.innerHTML = '';
+                if (data.workers && data.workers.length > 0) {
+                    let table = document.createElement('table');
+                    table.border = '1';
+                    let thead = document.createElement('thead');
+                    let headerRow = document.createElement('tr');
+                    ['Labour ID', 'Name', 'Worker Type', 'State', 'City', 'Action'].forEach(text => {
+                        let th = document.createElement('th');
+                        th.textContent = text;
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+                    let tbody = document.createElement('tbody');
+                    data.workers.forEach(worker => {
+                        let row = document.createElement('tr');
+                        ['labour_id', 'labour_name', 'professional', 'state', 'city'].forEach(key => {
+                            let td = document.createElement('td');
+                            td.textContent = worker[key] || 'N/A'; // Handle cases where key might be undefined
+                            row.appendChild(td);
+                        });
+                        let actionTd = document.createElement('td');
+                        let button = document.createElement('button');
+                        button.textContent = 'Send Request';
+                        button.onclick = () => openBookingModal(worker.labour_id);
+                        actionTd.appendChild(button);
+                        row.appendChild(actionTd);
+                        tbody.appendChild(row);
+                    });
+                    table.appendChild(tbody);
+                    searchResults.appendChild(table);
+                } else {
+                    searchResults.textContent = 'No workers available for the selected criteria.';
+                }
+                document.getElementById('searchResultsModal').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function openBookingModal(labour_id) {
+            document.getElementById('worker_id_display').textContent = labour_id;
+            document.getElementById('user_details').textContent = 'User ID: ' + '{{ user_id }}'; // Replace with actual user details
+            document.getElementById('bookingModal').style.display = 'block';
+        }
+
+        function sendBookingRequest() {
+            const labour_id = document.getElementById('worker_id_display').textContent;
+            const user_id = '{{ user_id }}'; // Replace with actual user ID
+            fetch('/send_booking_request', {  
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ labour_id: labour_id, user_id: user_id })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeModal('bookingModal');
+                    alert('Booking request sent successfully.');
+                } else {
+                    alert('Error sending booking request.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
+    
+</body>
+</html>

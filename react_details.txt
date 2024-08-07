@@ -1,0 +1,38 @@
+
+
+installed node js with npm package
+
+link : https://nodejs.org/en/download/prebuilt-installer
+
+
+after that automatically installed
+Chocolatey CLI (choco.exe) is now ready.
+and installing required packages
+like Installing vcredist140-x64..
+Installing visualstudio2019buildtools..
+
+cmd
+
+1. Ensure Node.js and npm are Installed
+Make sure you have Node.js and npm installed on your system. You can check this by running:
+
+node -v
+npm -v
+
+result
+C:\Users\karan>node -v
+v20.16.0
+
+C:\Users\karan>npm -v
+10.8.1
+
+checking the choco version, if not installed installed installed
+choco -v
+
+Installing Andriod studio 
+inside that it installing supportive tools
+Preparing "Install Google Play Intel x86_64 Atom System Image API 35 (revision 7)".
+Downloading https://dl.google.com/android/repository/sys-img/google_apis_playstore/x86_64-35_r07.zip
+
+
+

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Rental Service</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+    {% include 'headers.html' %}
+    <main class="transparent-container">
+        <h1>Find a Worker</h1>
+        <form action="{{ url_for('workers') }}" method="POST">
+            <label for="state">State:</label>
+            <select name="state" id="state">
+                {% for state in states %}
+                <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="city">City:</label>
+            <input type="text" name="city" id="city" required>
+
+            <label for="worker_type">Worker Type:</label>
+            <select name="worker_type" id="worker_type">
+                {% for worker_type in worker_types %}
+                <option value="{{ worker_type }}">{{ worker_type }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </main>
+    <br>
+    <div class="container">
+        <div class="user-section">
+            <h3>For User Registration</h3>
+            <h5>If you are booking Labour Frequently - Please, Do Registration</h5>
+            <a href="{{ url_for('user_signup') }}" class="button signup-button">Signup</a>
+        </div>
+        <div class="user-section">
+            <h3>For User Login</h3>
+            <h5>If you are already registered - Please, Do Login</h5>
+            <a href="{{ url_for('user_login') }}" class="button login-button">Login</a>
+        </div>
+    </div>
+    <div class="transparent-container">
+        <h1>Worker Registration</h1>
+        <a href="{{ url_for('labour_reg') }}" class="button">Register</a>
+    </div>
+    <br>
+    {% include 'footer.html' %}
+</body>
+</html>

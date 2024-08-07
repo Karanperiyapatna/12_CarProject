@@ -1,0 +1,164 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    color: #333;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #007bff;
+    transition: color 0.3s;
+  }
+  
+  a:hover {
+    color: #0056b3;
+  }
+  
+  /* Agent details section */
+  .agent-details {
+    padding: 20px;
+    background-color: #28a745;
+    color: #fff;
+    border-bottom: 2px solid #020509;
+  }
+  
+  .agent-details h2,
+  .agent-details h3,
+  .agent-details h4 {
+    margin: 5px 0;
+  }
+  
+  /* Bookings for today section */
+  .bookings-today {
+    padding: 20px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #ccc;
+  }
+  
+  .bookings-today h2 {
+    color: #007bff;
+  }
+  
+  .bookings-today table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .bookings-today table th,
+  .bookings-today table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .bookings-today table th {
+    background-color: #f2f2f2;
+    text-align: left;
+  }
+  
+  .bookings-today button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .bookings-today button:hover {
+    background-color: #218838;
+  }
+  
+  /* Labours list section */
+  .labours-list {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-bottom: 2px solid #ccc;
+  }
+  
+  .labours-list h2 {
+    color: #007bff;
+  }
+  
+  .labours-list table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .labours-list table th,
+  .labours-list table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .labours-list table th {
+    background-color: #f2f2f2;
+    text-align: left;
+  }
+  
+  .labours-list button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .labours-list button:hover {
+    background-color: #218838;
+  }
+  
+  /* Labour login section */
+  .labour-login {
+    padding: 20px;
+    background-color: #ffffff;
+    border-bottom: 2px solid #ccc;
+  }
+  
+  .labour-login h2 {
+    color: #007bff;
+  }
+  
+  .labour-login table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .labour-login table th,
+  .labour-login table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .labour-login table th {
+    background-color: #f2f2f2;
+    text-align: left;
+  }
+  
+  .labour-login button {
+    background-color: #ffc107;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .labour-login button:hover {
+    background-color: #e0a800;
+  }
+  
+
+    /* Labours Register section */
+    .labour-register {
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-bottom: 2px solid #ccc;
+      }
+      

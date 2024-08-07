@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <link rel="stylesheet" href="/static/css/contact_us.css">
+</head>
+<body>
+    {% include 'headers.html' %}
+    <div class="contact-container">
+        <h1>Contact Us</h1>
+
+        <div class="contact-card">
+            <h3>Kasthur</h3>
+            <h4>Designation: Director and Company Shareholder</h4>
+            <h4>Resident of State: Karnataka</h4>
+        </div>
+
+        <div class="contact-card">
+            <h3>Karan P A</h3>
+            <h4>Designation: CTO and Company Shareholder</h4>
+            <h4>Resident of State: Karnataka</h4>
+        </div>
+
+        <div>
+            <a href="{{ url_for('index') }}" class="button">Go back to homepage</a>
+        </div>
+    </div>
+</body>
+</html>

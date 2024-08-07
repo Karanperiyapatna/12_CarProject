@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Details</title>
+    <link rel="stylesheet" href="/static/css/user_payment.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Payment Details</h1>
+        {% if payment_detail %}
+        <div class="payment-details">
+            <p><strong>Order ID:</strong> {{ payment_detail.order_id }}</p>
+            <p><strong>User ID:</strong> {{ payment_detail.user_id }}</p>
+            <p><strong>Total Number of Working Days:</strong> {{ payment_detail.total_number_working_days }}</p>
+            <p><strong>Labour Charge per Day:</strong> {{ payment_detail.labour_charge }}</p>
+            <p><strong>Total Charge:</strong> {{ payment_detail.total_charge }}</p>
+            <!-- <p><strong>Payment Status:</strong> {{ payment_detail.payment_status }}</p> -->
+        </div>
+        <div class="payment-actions">
+            <button onclick="makePayment('{{ payment_detail.order_id }}')">Make Payment</button>
+        </div>
+        {% else %}
+        <p>No payment details available.</p>
+        {% endif %}
+    </div>
+
+<!-- 
+    <script>
+        function makePayment(orderId) {
+            // Implement the logic to make the payment
+            alert('Payment initiated for Order ID: ' + orderId);
+        }
+    </script> -->
+</body>
+</html>

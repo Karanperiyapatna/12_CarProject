@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="/static/css/about_us.css">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> -->
+
+</head>
+<body>   
+    {% include 'headers.html' %}
+    <div>
+        <h1>Terms and Conditions</h1>
+    </div>
+
+    <div>
+        <div>
+            <h5>These terms and conditions ("Terms") govern the use of se1rvices made available on or through https://www.k2company.com and/or the K2 Company mobile app (collectively, the "Platform", and together with the services made available on or through the Platform, the "Services"). These Terms also include our privacy policy, available at https://www.urbancompany.com/privacy-policy ("Privacy Policy"), and any guidelines, additional, or supplemental terms, policies, and disclaimers made available or issued by us from time to time ("Supplemental Terms"). The Privacy Policy and the Supplemental Terms form an integral part of these Terms. In the event of a conflict between these Terms and the Supplemental Terms with respect to applicable Services, the Supplemental Terms will prevail.</h5>
+        </div>
+    </div>
+<div>
+    <a href="{{ url_for('index') }}" class="button">Go back to homepage</a>
+</div>
+{% include 'footer.html' %}
+</body>
+</html>
