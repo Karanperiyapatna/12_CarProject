@@ -1,0 +1,157 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Dashboard</title>
+
+  <link rel="stylesheet" href="/static/css/agent_dashboard.css">
+</head>
+<body>
+
+  {% include 'headers.html' %}
+  <div class="agent-details">
+    <h2>Agent Dashboard</h2>
+    <h3>Name : {{ agent_name }}</h3>
+    <h4>Agent Code : {{ agent_id }}</h4>
+    <h4>Username : {{ agent_username }}</h4>
+    <a href="{{ url_for('agent_logout') }}"><button>Logout</button></a>
+  </div>
+  
+  <div class="bookings-today">
+    <h2>Your Booked Labours are</h2>
+    <h4>Today's booking list will come first, previous day next, and goes up to 3 days</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Registered Date</th>
+          <th>User ID</th>
+          <th>Labour ID</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Status</th>
+          <th>Remark</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+        <tr>
+          <td>{{ booking.registered_date }}</td>
+          <td>{{ booking.user_id }}</td>
+          <td>{{ booking.labour_id }}</td>
+          <td>{{ booking.start_date }}</td>
+          <td>{{ booking.end_date }}</td>
+          <td>{{ booking.status }}</td>
+          <td>{{ booking.remark }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="labours-list">
+    <h2>Labours List to send work on today</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Labour ID</th>
+          <th>Labour Name</th>
+          <th>Professional Type</th>
+          <th>Working City</th>
+          <th>Select All<input type="checkbox" id="selectAll"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for labour in labours %}
+        <tr>
+          <td>{{ labour.labour_id }}</td>
+          <td>{{ labour.labour_name }}</td>
+          <td>{{ labour.professional }}</td>
+          <td>{{ labour.city }}</td>
+          <td><input type="checkbox" name="selectedLabours" value="{{ labour.labour_id }}"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button onclick="getSelectedLabours()">Submit Selected</button>
+  </div>
+  
+  <div class="labour-login">
+    <h2>Your Labour's Login Button</h2>
+    <h4>This concept is where labours are unskilled, and the agent directly logs in by clicking a button and accepting or rejecting the bookings</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>Labour ID</th>
+          <th>Labour Name</th>
+          <th>Professional Type</th>
+          <th>Working City</th>
+          <th>Login</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for labour in labours %}
+        <tr>
+          <td>{{ labour.labour_id }}</td>
+          <td>{{ labour.labour_name }}</td>
+          <td>{{ labour.professional }}</td>
+          <td>{{ labour.city }}</td>
+          <td><button>Labour Login</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div >
+    <br>
+    <h3>here you can Register the new labours </h3>
+    <a href="{{ url_for('labour_signup', agent_id=agent_id) }}"><button>Add Labour</button></a>
+  </div>
+  
+  {% include 'footer.html' %}
+  
+
+
+  <script>
+    document.getElementById('selectAll').addEventListener('click', function() {
+      var checkboxes = document.querySelectorAll('input[name="selectedLabours"]');
+      for (var checkbox of checkboxes) {
+        checkbox.checked = this.checked;
+      }
+    });
+
+    function getSelectedLabours() {
+      var selectedLabours = [];
+      var checkboxes = document.querySelectorAll('input[name="selectedLabours"]:checked');
+      for (var checkbox of checkboxes) {
+        selectedLabours.push(checkbox.value);
+      }
+      console.log("Selected Labours: ", selectedLabours);
+
+      if (selectedLabours.length > 0) {
+        fetch('/submit_labours', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ labour_ids: selectedLabours })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.message) {
+            alert(data.message);
+          } else if (data.error) {
+            alert(data.error);
+          }
+        })
+        .catch(error => console.error('Error:', error));
+      } else {
+        alert('No labours selected');
+      }
+    }
+  </script>
+  
+</body>
+</html>

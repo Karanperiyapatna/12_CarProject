@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Labour Dashboard</title>
+    <link rel="stylesheet" href="/static/css/labour_dashboard.css">
+</head>
+<body>
+    {% include 'headers.html' %}
+    <div class="container">
+        <h1>Labour Dashboard</h1>
+        <p>Labour ID: {{ labour_id }}</p>
+        
+        <br>
+        <button onclick="loadNotifications()">Check Notifications</button>
+        <div id="notificationArea"></div>
+        <br>
+        <br>
+        <br>     
+        <h2>Your Booking Order list</h2>   
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Start Date</th>
+                    <th>User ID</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.order_id }}</td>
+                        <td>{{ booking.start_date }}</td>
+                        <td>{{ booking.user_id }}</td>
+                        <td>{{ booking.status }}</td>
+                        <td>
+                            <button id="startButton_{{ booking.order_id }}" onclick="openModal('{{ booking.order_id }}')">Start Work</button>
+                            <button id="endButton_{{ booking.order_id }}" onclick="endWork('{{ booking.order_id }}')" class="hidden">End Work</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div>
+
+            <h3>Please select when your not working, click here</h3>
+            <button class="work_reg_button" onclick="toggleAvailability()">Click Here</button>
+
+            <h4>Please select the dates  </h4>
+            <div id="availabilityForm" style="display: none;">
+                <form id="availabilityForm">
+                    <label for="availability_dates">Select Dates:</label>
+                    <input type="text" id="availability_dates" name="availability_dates" readonly>
+                    <input type="checkbox" id="isNotWorking" name="is_not_working" value="true">
+                    <label for="isNotWorking">Not Working</label>
+                    <button type="button" onclick="updateAvailability()">Update Status</button>
+                </form>
+            </div>
+        </div>
+    
+    </div>
+    <br>
+
+<script>
+    function loadNotifications() {
+        fetch('{{ url_for("get_notifications") }}', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            const notificationArea = document.getElementById('notificationArea');
+            notificationArea.innerHTML = '';
+            if (data.notifications && data.notifications.length > 0) {
+                data.notifications.forEach(notification => {
+                    let div = document.createElement('div');
+                    div.textContent = `Booking request from user ID: ${notification.user_id}`;
+                    let acceptButton = document.createElement('button');
+                    acceptButton.textContent = 'Accept';
+                    acceptButton.onclick = () => handleNotification('accept', notification._id);
+                    let rejectButton = document.createElement('button');
+                    rejectButton.textContent = 'Reject';
+                    rejectButton.onclick = () => handleNotification('reject', notification._id);
+                    div.appendChild(acceptButton);
+                    div.appendChild(rejectButton);
+                    notificationArea.appendChild(div);
+                });
+            } else {
+                notificationArea.textContent = 'No new notifications.';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function handleNotification(action, notificationId) {
+        fetch('{{ url_for("handle_notification") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: action, notification_id: notificationId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`Request ${action}ed successfully.`);
+                if (action === 'accept') {
+                    alert(`OTP sent to the user.`);
+                }
+                loadNotifications();  // Refresh notifications
+            } else {
+                alert('Error handling the request.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+    <!-- OTP Modal -->
+    <div id="otpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Enter OTP</h2>
+            <input type="text" id="otpInput" placeholder="Enter OTP">
+            <button onclick="validateOTP()">Submit</button>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        let currentOrderId = null;
+
+        function openModal(orderId) {
+            currentOrderId = orderId;
+            document.getElementById('otpModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('otpModal').style.display = 'none';
+        }
+
+        async function validateOTP() {
+            const otp = document.getElementById('otpInput').value;
+            const response = await fetch('/validate_otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ order_id: currentOrderId, otp: otp }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById(`startButton_${currentOrderId}`).style.display = 'none';
+                document.getElementById(`endButton_${currentOrderId}`).style.display = 'inline';
+                closeModal();
+                alert('Work started successfully!');
+            } else {
+                alert('Invalid OTP. Please try again.');
+            }
+        }
+
+        async function endWork(orderId) {
+            const response = await fetch('/end_work', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ order_id: orderId }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                document.getElementById(`endButton_${orderId}`).disabled = true;
+                alert('Work ended successfully!');
+                window.location.href = "{{ url_for('user_payment') }}?order_id=" + orderId;
+            } else {
+                alert('Error ending work. Please try again.');
+            }
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('otpModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        function toggleAvailability() {
+            const form = document.getElementById('availabilityForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function updateAvailability() {
+            const dates = document.getElementById('availability_dates').value;
+            const isNotWorking = document.getElementById('isNotWorking').checked;
+
+            const selectedDates = dates.split(',').map(date => ({
+                date: date.trim(),
+                status: isNotWorking ? 5 : 4
+            }));
+
+            const response = await fetch('/update_availability', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ labour_id: '{{ labour_id }}', status_dates: selectedDates })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Availability updated successfully!');
+                document.getElementById('availabilityForm').style.display = 'none';
+            } else {
+                alert('Error updating availability. Please try again.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("#availability_dates", {
+                mode: "multiple",
+                dateFormat: "Y-m-d"
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</body>
+</html>
+
+
+
+<!--  
+
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Labour Dashboard</title>
+    <link rel="stylesheet" href="/static/css/labour_dashboard.css">
+
+
+</head>
+<body>
+    {% include 'headers.html' %}
+<div class="container">
+    <div>
+        <h1>Labour Dashboard</h1>
+    </div>
+    <div>
+        <p>Labour ID: {{ labour_id }}</p>
+    
+    </div>
+
+    <div>
+        <button class="work_reg_button" onclick="toggleAvailability()">Toggle Availability</button>
+        <div id="availabilityForm" style="display: none;">
+            <form id="availabilityForm" action="{{ url_for('update_status') }}" method="post">
+                <input type="hidden" name="labour_id" value="{{ labour_id }}">
+                <div>
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" required>
+                </div>
+                <div>
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" required>
+                </div>
+                <div>
+                    <label for="start_time">Start Time:</label>
+                    <input type="time" name="start_time" required>
+                </div>
+                <div>
+                    <label for="end_time">End Time:</label>
+                    <input type="time" name="end_time" required>
+                </div>
+                <div>
+                    <input type="checkbox" name="is_not_working" value="true"> Not Working
+                </div>
+                <button type="submit">Update Status</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Start Date</th>
+                    <th>User ID</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.order_id }}</td>
+                        <td>{{ booking.start_date }}</td>
+                        <td>{{ booking.user_id }}</td>
+                        <td>{{ booking.status }}</td>
+                        <td>
+                            <button id="startButton_{{ booking.order_id }}" onclick="openModal('{{ booking.order_id }}')">Start Work</button>
+                            <button id="endButton_{{ booking.order_id }}" onclick="endWork('{{ booking.order_id }}')" class="hidden">End Work</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div id="otpModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Enter OTP</h2>
+      <input type="text" id="otpInput" placeholder="Enter OTP">
+      <button onclick="validateOTP()">Submit</button>
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+
+<script>
+    let currentOrderId = null;
+
+function openModal(orderId) {
+    currentOrderId = orderId;
+    document.getElementById('otpModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('otpModal').style.display = 'none';
+}
+
+async function validateOTP() {
+    const otp = document.getElementById('otpInput').value;
+    const response = await fetch('/validate_otp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ order_id: currentOrderId, otp: otp }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        document.getElementById(`startButton_${currentOrderId}`).style.display = 'none';
+        document.getElementById(`endButton_${currentOrderId}`).style.display = 'inline';
+        closeModal();
+        alert('Work started successfully!');
+    } else {
+        alert('Invalid OTP. Please try again.');
+    }
+}
+
+async function endWork(orderId) {
+    const response = await fetch('/end_work', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ order_id: orderId }),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        document.getElementById(`endButton_${orderId}`).disabled = true;
+        alert('Work ended successfully!');
+        // Optionally, update the status in the UI
+        // window.location.href = "{{ url_for('user_payment') }}";
+        window.location.href = "{{ url_for('user_payment') }}?order_id=" + orderId;
+    } else {
+        alert('Error ending work. Please try again.');
+    }
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('otpModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function toggleAvailability() {
+            const form = document.getElementById('availabilityForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+</script>
+
+
+<div>
+    <h2>Set Active/Sleep Mode</h2>
+    <form id="statusForm" onsubmit="setStatus(event)">
+        <label for="statusDate">Select Date:</label>
+        <input type="date" id="statusDate" name="statusDate">
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="active">Active</option>
+            <option value="sleep">Sleep</option>
+        </select>
+        <button type="submit">Set Status</button>
+    </form>
+</div>
+
+<script>
+    function setStatus(event) {
+        event.preventDefault();
+        const form = document.getElementById('statusForm');
+        const formData = new FormData(form);
+        fetch('{{ url_for("update_status", labour_id=labour_id) }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Status updated successfully');
+            } else {
+                alert('Failed to update status');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>
+
+
+-->
+
+
+
+
+
+
+
+
+<!-- old script -->
+
+<!-- <div id="otpModal" style="display: none;">
+    <div>
+        <h2>Enter OTP</h2>
+        <input type="text" id="otpInput" placeholder="Enter OTP">
+        <button onclick="validateOTP()">Submit</button>
+        <button onclick="closeModal()">Close</button>
+    </div>
+</div>  -->
+
+<!-- 
+
+
+<script>
+    let currentOrderId = null;
+
+    function openModal(orderId) {
+        currentOrderId = orderId;
+        document.getElementById('otpModal').style.display = 'block';
+    }
+
+    function closeModal() {
+        document.getElementById('otpModal').style.display = 'none';
+    }
+
+    async function validateOTP() {
+        const otp = document.getElementById('otpInput').value;
+        const response = await fetch('/validate_otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ order_id: currentOrderId, otp: otp }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            document.getElementById(`startButton_${currentOrderId}`).style.display = 'none';
+            document.getElementById(`endButton_${currentOrderId}`).style.display = 'inline';
+            closeModal();
+            alert('Work started successfully!');
+        } else {
+            alert('Invalid OTP. Please try again.');
+        }
+    }
+
+    async function endWork(orderId) {
+        const response = await fetch('/end_work', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ order_id: orderId }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            document.getElementById(`endButton_${orderId}`).disabled = true;
+            alert('Work ended successfully!');
+            // Optionally, update the status in the UI
+            window.location.href = "{{ url_for('user_payment') }}";
+        } else {
+            alert('Error ending work. Please try again.');
+        }
+    }
+</script>
+
+ -->
+
+<!-- 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labor Dashboard</title>
+    <link rel="stylesheet"  href="/static/css/labour_styles.css">
+    
+    
+</head>
+<body>
+    <div class="container">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Start Date</th>
+                    <th>User ID</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.start_date }}</td>
+                        <td>{{ booking.user_id }}</td>
+                        <td>{{ booking.status }}</td>
+                        <td>
+                            <button class="action-button" id="startButton_{{ booking.order_id }}" onclick="openModal('{{ booking.order_id }}')">Start Work</button>
+                            <button class="action-button" id="endButton_{{ booking.order_id }}" onclick="endWork('{{ booking.order_id }}')" style="display: none;">End Work</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <div id="otpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Enter OTP</h2>
+            <input type="text" id="otpInput" placeholder="Enter OTP">
+            <button class="submit-button" onclick="validateOTP()">Submit</button>
+        </div>
+    </div>
+
+    <script src="/static/js/labour_script.js"></script>
+</body>
+</html> -->

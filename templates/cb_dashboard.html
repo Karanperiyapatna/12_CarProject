@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/labour_dashboard.css">
+</head>
+<body>
+    Commision Based Dashboard
+
+    {% include 'headers.html' %}
+    <div class="agent-details">
+      <h2>Commission Based Dashboard</h2>
+      <!-- <h3>Name : {{ agent_name }}</h3> -->
+      <h4>CB Code : {{ cb_id }}</h4>
+      <!-- <h4>Username : {{ agent_username }}</h4> -->
+    </div>
+    
+    <div >
+      <br>
+      <h3>here you can Register the new labours </h3>
+      <a href="{{ url_for('labour_signup', agent_id=cb_id) }}"><button>Add Labour</button></a>
+    </div>
+
+    <div class="bookings-today">
+      <h2>Your Bookings for today</h2>
+      <h4>Giving the date selecting option based on that display the workers list</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Joined Date</th>
+            <th>Labour ID</th>
+            <th>City</th>
+            <th>Remark</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for labour in labours %}
+          <tr>
+            <td>{{ labour.registered_date }}</td>
+            <td>{{ labour.labour_id }}</td>
+            <td>{{ labour.city }}</td>
+            <td>{{ labour.remark }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+</body>
+</html>

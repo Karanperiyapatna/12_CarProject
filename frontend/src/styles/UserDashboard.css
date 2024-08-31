@@ -1,0 +1,441 @@
+/* Base styles for body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for full width */
+.user-dashboard-container {
+    width: 100%;
+    padding: 30px 20px;
+    box-sizing: border-box;
+    background: white; /* Background color for the container */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    margin: 0 auto;
+    margin-top: 70px; /* Adjust margin-top to match the height of the header */
+}
+
+/* Welcome section styling */
+.welcome-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.welcome-left {
+    width: 30%;
+}
+
+.welcome-right {
+    width: 70%;
+    text-align: right;
+}
+
+.welcome-right button {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.welcome-right button:hover {
+    background-color: #0056b3;
+}
+
+/* Booking section styling */
+.booking-section {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.booking-form-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.booking-form-left, .booking-form-right {
+    width: 48%;
+}
+
+.booking-form-left {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.booking-form-right {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-form div {
+    margin-bottom: 15px;
+}
+
+.search-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select {
+    display: block;
+    padding: 12px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    padding: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+/* spot and advance booking button code */
+
+.buttons-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px; /* Adjust padding as needed */
+}
+
+.buttons-section button {
+    /* Optional: Adjust button styles if needed */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+/* booked details css code */
+
+/* upgraded to toggle notification */
+
+
+
+
+/* booked details visible invisible toggle notification */
+
+.booked-details {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.booked-details h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.booked-details table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.booked-details th, .booked-details td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.booked-details th {
+    background-color: #f2f2f2; /* Light gray background for headers */
+    font-weight: bold;
+}
+
+.booked-details tr:nth-child(odd) {
+    background-color: #f9f9f9; /* Light gray for odd rows */
+}
+
+.booked-details tr:nth-child(even) {
+    background-color: #ffffff; /* White for even rows */
+}
+
+.booked-details td[colSpan="3"] {
+    text-align: center;
+    color: #888;
+}
+
+.toggle-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.toggle-button:hover {
+    background-color: #0056b3;
+}
+
+
+
+/*  Display the Labour list */
+
+/* Container for the available laborers section */
+/* Container for the available laborers section */
+.labours-container {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+/* Header row to be fixed at the top */
+.labours-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+    gap: 10px; /* Space between columns */
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border-bottom: 2px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Header columns with additional padding and margin */
+.labours-header span {
+    text-align: center;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #0056b3; /* Darker blue for the header cells */
+    border-radius: 4px;
+}
+
+/* List of laborers */
+.labours-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto;
+}
+
+/* Individual laborer list item */
+.labours-container li {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+    gap: 10px; /* Space between columns */
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.labours-container li:nth-child(odd) {
+    background-color: #f0f0f0;
+}
+
+/* Styling for the laborer information */
+.labours-container li span {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+}
+
+/* Styling for the button */
+.labours-container button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.labours-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Hover effect for the list item */
+.labours-container li:hover {
+    background-color: #e9e9e9;
+}
+
+
+/* Responsive design for mobile */
+@media (max-width: 767px) {
+    .welcome-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .welcome-left, .welcome-right {
+        width: 100%;
+    }
+
+    .booking-form-container {
+        flex-direction: column;
+    }
+
+    .booking-form-left, .booking-form-right {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    input, select {
+        padding: 8px;
+        width: calc(100% - 16px);
+    }
+
+    button[type="submit"] {
+        padding: 12px;
+    }
+}
+
+/* Styles for booked details */
+.booked-details {
+    background: #ffffff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.booked-details h2 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+.booked-details ul {
+    list-style: none;
+    padding: 0;
+}
+
+.booked-details li {
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+
+
+/* pop up box list */
+
+/* Ensure the modal is correctly positioned and visible */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Dark overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal content styling */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative; /* Position relative for close button */
+}
+
+/* Close button styling */
+.close {
+    color: red; /* Color for close button */
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+.close:hover {
+    color: darkred; /* Hover color for close button */
+}
+
+
+/* Booking details display */
+
+
+/* General table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+/* Table headers styling */
+th {
+    background-color: #f2f2f2;
+    color: #333;
+    padding: 10px;
+    text-align: left;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Table data cells styling */
+td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Table rows alternate background color */
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Button styling */
+.toggle-button {
+    background-color: #4CAF50; /* Green background */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.toggle-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}

@@ -1,0 +1,31 @@
+python -m venv venv  
+
+venv\Scripts\activate
+
+pip install flask
+
+python -m pip install --upgrade pip
+
+pip3 install flask   
+
+
+create a app.py
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return 'Hello, World!'
+
+
+in terminal run "flask run" cmd
+
+
+
+
+Process Steps
+
+For entire the vehicles details - directly to mongodb
+
+then it will fetch from the mongodb

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Labour Registration</title>
+    <link rel="stylesheet" href="/static/css/labour_reg.css">
+</head>
+<body>
+    {% include 'headers.html' %}
+
+    <div class="registration-container">
+        <h1>Labour Registration Page</h1>
+        <div class="registration-section">
+            <div class="registration-card">
+                <h2>Labour Signup Page</h2>
+                <a href="{{ url_for('labour_signup') }}" class="button">Click Here</a>
+            </div>
+            <div class="registration-card">
+                <h2>Labour Login Page</h2>
+                <a href="{{ url_for('labour_login') }}" class="button">Click Here</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="registration-container">
+        <h1>Partner Registration Page</h1>
+        <div class="registration-section">
+            <div class="registration-card">
+                <h2>Agent Signup Page</h2>
+                <a href="{{ url_for('agent_signup') }}" class="button">Click Here</a>
+            </div>
+            <div class="registration-card">
+                <h2>Agent Login Page</h2>
+                <a href="{{ url_for('agent_login') }}" class="button">Click Here</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="registration-container">
+        <h1>Commision Based Agent Registration Page</h1>
+        <div class="registration-section">
+            <div class="registration-card">
+                <h2>CB Signup Page</h2>
+                <a href="{{ url_for('cb_signup') }}" class="button">Click Here</a>
+            </div>
+            <div class="registration-card">
+                <h2>CB Login Page</h2>
+                <a href="{{ url_for('cb_login') }}" class="button">Click Here</a>
+            </div>
+        </div>
+        <div class="home-button-container">
+            <a href="{{ url_for('index') }}" class="button">Go back to homepage</a>
+        </div>
+    </div>
+</body>
+</html>

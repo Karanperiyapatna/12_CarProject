@@ -1,0 +1,146 @@
+.company-info {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .intro-section,
+  .mission-section,
+  .vision-section,
+  .legal-section,
+  .advantage-section {
+    margin-bottom: 30px;
+  }
+  
+  h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+  }
+  
+  h2 {
+    color: #34495e;
+    margin-bottom: 15px;
+  }
+  
+  h3 {
+    color: #2980b9;
+    margin-bottom: 10px;
+  }
+  
+  h4 {
+    color: #8e44ad;
+    margin-bottom: 8px;
+  }
+  
+  p {
+    color: #7f8c8d;
+    line-height: 1.6;
+  }
+  
+  .advantages {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .advantage-item {
+    background-color: #ecf0f1;
+    padding: 15px;
+    border-radius: 5px;
+  }
+  
+  .advantage-item ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+  
+  .advantage-item ul li {
+    margin-bottom: 5px;
+  }
+  
+  .advantage-item:last-child {
+    grid-column: span 2;
+  }
+  
+  .advantage-item p {
+    margin: 0;
+  }
+  
+
+/* Add css style for image carosel */
+
+.about-us-container {
+  padding: 20px;
+}
+
+.about-section {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.about-img {
+  width: 40%;
+  height: auto;
+  margin-right: 20px;
+  border-radius: 10px;
+}
+
+.about-content {
+  max-width: 50%;
+}
+
+.about-content h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.about-content p {
+  font-size: 1.2em;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+
+/* Adding style to Mission, Vission and  */
+
+.intro-section,
+.workingprocess-section,
+.mission-section,
+.vision-section {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.intro-section h1,
+.mission-section h1,
+.vision-section h1 {
+  font-size: 2em;
+  color: #1a1a1a;
+  margin-bottom: 15px;
+}
+
+.intro-section h2,
+.mission-section p,
+.vision-section p {
+  font-size: 1.1em;
+  color: #2c3e50;
+  line-height: 1.8;
+}
+
+.intro-content {
+  display: flex;
+  align-items: center;
+}
+
+.intro-content img {
+  width: 20%;
+  height: auto;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.text-content {
+  flex: 1.5;
+}

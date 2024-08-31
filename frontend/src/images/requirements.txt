@@ -1,0 +1,17 @@
+Flask
+Flask-PyMongo
+Flask-CORS
+Werkzeug
+PyJWT
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+AWS Details
+
+Karan#9986
+KaranPA
+
+
+
+ubunutOD choosen
+
+
+Before you start, make sure you have Python and pip installed on your system. If you don’t have them already, you can install them by running the following commands:
+sudo apt update 
+sudo apt install python3 python3-pip python3-venv 
+
+
+python3 -m venv venv
+source venv/bin/activate
+
+pip3 install flask
+ python3 -m flask --version
+
+
+
+
+Deed Registart Form Link -Karnataka Govt
+
+https://igr.karnataka.gov.in/info-2/Model+Deeds/Partnership+Model+Deeds/en
+
+Deed Sample
+
+https://www.scribd.com/document/473590381/partnership-deed-compressed-1-pdf

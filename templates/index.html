@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Flask-React Starter</h1>
+<p>This is the base Flask template. The React app is served separately.</p>
+{% endblock %}
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Rental Service</title>
+    <link rel="stylesheet" href="/static/css/index.css">
+    <script>
+        function service_search() {
+            let input = document.getElementById('searchbar').value
+            input = input.toLowerCase();
+            let x = document.getElementsByClassName('animals');
+
+            for (i = 0; i < x.length; i++) {
+                if (!x[i].innerHTML.toLowerCase().includes(input)) {
+                x[i].style.display = "none";
+                }
+                else {
+                x[i].style.display = "list-item";
+                }
+            }
+            }
+    </script>
+</head>
+<body>
+    {% include 'headers.html' %}
+    <div class="serach_option">
+        <div class="serach_option">
+            <input id="searchbar" 
+                   onkeyup="service_search()" 
+                   type="text" name="search" 
+                   placeholder="Search Services..">
+    
+            <ul id='list'>
+                <li class="search">Service List</li>
+                <li class="search">Labour Ratings</li>
+                <li class="search">Customer Feedback</li>
+                <li class="search"></li>
+            </ul>
+        </div>
+
+    </div>
+    <main class="transparent-container">
+        <h1>Find a Worker</h1>
+        <form action="{{ url_for('workers') }}" method="POST">
+            <label for="state">State:</label>
+            <select name="state" id="state">
+                {% for state in states %}
+                <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="city">City:</label>
+            <input type="text" name="city" id="city" required>
+
+            <label for="worker_type">Worker Type:</label>
+            <select name="worker_type" id="worker_type">
+                {% for worker_type in worker_types %}
+                <option value="{{ worker_type }}">{{ worker_type }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="search-button">Search</button>
+        </form>
+    </main>
+    <br>
+    <div>
+        <h2>Major Service provides</h2>
+        <div>
+            <h5>Helper</h5>
+        </div>
+    </div>
+
+    <br>
+    <div>
+        <h2>Company Outview Details</h2>
+        <h4>Playing videos and image display</h4>
+    </div>
+    <br>
+    <div class="container">
+        <div class="user-section">
+            <h3>For User Registration</h3>
+            <h5>If you are booking Labour Frequently - Please, Do Registration</h5>
+            <a href="{{ url_for('user_signup') }}" class="button signup-button">Signup</a>
+        </div>
+        <div class="user-section">
+            <h3>For User Login</h3>
+            <h5>If you are already registered - Please, Do Login</h5>
+            <a href="{{ url_for('user_login') }}" class="button login-button">Login</a>
+        </div>
+    </div>
+    <div class="transparent-container">
+        <h1>Worker Registration</h1>
+        <a href="{{ url_for('labour_reg') }}" class="button">Register</a>
+    </div>
+    <br>
+
+    <div class="container_1">
+        <h3>Recently booking Labour Details</h3>
+        <div class="user-section">
+            <h5>rattings</h5>
+            <h5>labour name</h5>
+            <h5>price</h5>
+        </div>
+        <div class="user-section">
+            <h5>rattings</h5>
+            <h5>labour name</h5>
+            <h5>price</h5>
+        </div>
+    </div>
+    
+    <div class="chatbot">
+        <img class="chatbotImage" src="/static/chatbot.png" alt="Chatbot" onclick="displayOptions()" />
+        <div id="chatbotOptions" class="chatbotOptions" style="display: none;">
+            <ul>
+                <li onclick="sendOption('marketing')">🚀 Marketing</li>
+                <li onclick="sendOption('customer_support')">💬 Customer Support</li>
+            </ul>
+        </div>
+        <span id="chatbotOutput" class="chatbotOutput">Talk to me.</span>
+    
+
+        <style>
+            .chatbot {
+    position: relative;
+}
+
+.chatbotOptions {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.chatbotOptions ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chatbotOptions li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.chatbotOptions li:hover {
+    background-color: #f0f0f0;
+}
+
+        </style>
+        <script>
+function displayOptions() {
+    var optionsDiv = document.getElementById('chatbotOptions');
+    if (optionsDiv.style.display === 'none' || optionsDiv.style.display === '') {
+        optionsDiv.style.display = 'block';
+    } else {
+        optionsDiv.style.display = 'none';
+    }
+}
+
+function sendOption(option) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/chatbot_option', true);
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var response = JSON.parse(xhr.responseText);
+            document.getElementById('chatbotOutput').textContent = response.message;
+        }
+    };
+    xhr.send(JSON.stringify({ option: option }));
+}
+
+        </script>
+    </div>
+
+
+    {% include 'footer.html' %}
+</body>
+</html>

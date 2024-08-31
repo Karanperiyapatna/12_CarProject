@@ -1,0 +1,68 @@
+/* Container styling */
+form {
+    width: 100%;
+    max-width: 500px; /* Control form width */
+    margin: 80px auto 0; /* Center form, ensure margin from top to avoid header overlap */
+    padding: 20px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Styling for form elements */
+input, textarea {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Button styling */
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling for the form header */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 24px;
+}
+
+/* Responsive styling for smaller screens */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+        margin: 60px auto 0; /* Adjust top margin for smaller screens */
+    }
+
+    input, textarea {
+        font-size: 14px;
+    }
+
+    button {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+}

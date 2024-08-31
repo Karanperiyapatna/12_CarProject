@@ -1,0 +1,44 @@
+
+/* Adding style to Mission, Vission and  */
+
+.intro-section,
+.workingprocess-section,
+.mission-section,
+.vision-section {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.intro-section h1,
+.mission-section h1,
+.vision-section h1 {
+  font-size: 2em;
+  color: #1a1a1a;
+  margin-bottom: 15px;
+}
+
+.intro-section h2,
+.mission-section p,
+.vision-section p {
+  font-size: 1.1em;
+  color: #2c3e50;
+  line-height: 1.8;
+}
+
+.intro-content {
+  display: flex;
+  align-items: center;
+}
+
+.intro-content img {
+  width: 20%;
+  height: auto;
+  border-radius: 10px;
+  margin-right: 20px;
+}
+
+.text-content {
+  flex: 1.5;
+}

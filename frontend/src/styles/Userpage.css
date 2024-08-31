@@ -1,0 +1,80 @@
+/* Userpage.css */
+
+/* Styling for the navigation blocks */
+.nav-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9; /* Light background color for contrast */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.nav-block img {
+    width: 100%; /* Ensure the image takes the full width of the block */
+    height: 150px; /* Fixed height for the background image */
+    object-fit: cover; /* Ensure the image covers the block without distortion */
+}
+
+.nav-block-content {
+    padding: 20px;
+}
+
+.nav-block-content h2 {
+    font-size: 24px;
+    margin: 10px 0;
+    color: #333; /* Darker text color for readability */
+}
+
+.nav-block-content p {
+    font-size: 16px;
+    color: #666; /* Subtle text color */
+    margin-bottom: 20px;
+}
+
+.nav-block-content a {
+    display: inline-block;
+    background-color: #4CAF50; /* Green button background */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.nav-block-content a:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+/* Specific styles for SignUp and Login blocks */
+.signup-block {
+    background-color: #e7f3fe; /* Light blue background */
+}
+
+.login-block {
+    background-color: #ffe6e6; /* Light red background */
+}
+
+/* Responsive design */
+@media (min-width: 768px) {
+    .nav-block {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .nav-block img {
+        width: 50%; /* Image takes half the block width on larger screens */
+        height: auto;
+    }
+
+    .nav-block-content {
+        width: 50%;
+        padding: 30px;
+    }
+}
+

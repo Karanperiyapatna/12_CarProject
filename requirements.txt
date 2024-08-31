@@ -1,0 +1,17 @@
+Flask
+Flask-PyMongo
+Flask-CORS
+Werkzeug
+PyJWT
+
+
+
+
+react 
+
+You need to install the react-router-dom package in your React project. Run the following command in your React project directory:
+
+npm install react-router-dom
+
+
+npm run build

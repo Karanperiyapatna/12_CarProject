@@ -1,0 +1,350 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Workers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Available Workers</h1>
+    {% if workers %}
+        <ul>
+            {% for worker in workers %}
+                <li>
+                    {{ worker.name }} ({{ worker.worker_type }}) - {{ worker.state }}, {{ worker.district }}
+                    <form action="{{ url_for('book') }}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="register_Number" value="{{ worker.register_Number }}">
+                        <label for="name">Name:</label>
+                        <input type="text" name="name" required>
+                        <label for="mobile_number">Mobile Number:</label>
+                        <input type="text" name="mobile_number" required>
+                        <label for="address">Address:</label>
+                        <input type="text" name="address" required>
+                        <label for="start_date">Start Date:</label>
+                        <input type="date" name="start_date" required>
+                        <label for="end_date">End Date:</label>
+                        <input type="date" name="end_date" required>
+                        <label for="addressProof">Address Proof:</label>
+                        <input type="file" name="addressProof" required>
+                        <button type="submit">Book Worker</button>
+                    </form>
+                </li>
+
+                <a href="{{ url_for('index') }}">Go back to homepage</a>
+            {% endfor %}
+
+        </ul>
+    {% else %}
+        <p>No workers available for the selected criteria.</p>
+        <a href="{{ url_for('index') }}">Go back to homepage</a>
+    {% endif %}
+</body>
+</html> -->
+
+
+
+
+<!-- ================================= jumping to the agent booking url link, this code working fine ======================= -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Available Workers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .form-step {
+            display: none;
+        }
+        .button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+}
+
+    .button:hover {background-color: #3e8e41}
+
+    .button:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+
+
+    /* General styling for the form */
+#bookingForm {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+/* Styling for each form group */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Styling for the labels */
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Styling for the inputs */
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Styling for the submit button */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 5px #999;
+}
+
+.button:hover {
+    background-color: #3e8e41;
+}
+
+.button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 3px #666;
+    transform: translateY(2px);
+}
+    </style>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f9f9f9;
+                margin: 0;
+                padding: 20px;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            thead {
+                background-color: #4CAF50;
+                color: white;
+            }
+            th, td {
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            tbody tr:hover {
+                background-color: #f1f1f1;
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+
+                               /* class="button" - This is for the css style for particular button, here for work registration  */
+        
+                               .work_reg_button {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    cursor: pointer;
+                    text-align: center;
+                    text-decoration: none;
+                    outline: none;
+                    color: #fff;
+                    background-color: #4CAF50;
+                    border: none;
+                    border-radius: 15px;
+                    box-shadow: 0 9px #999;
+                }
+
+    .button:hover {background-color: #3e8e41}
+
+    .button:active {
+                        background-color: #3e8e41;
+                        box-shadow: 0 5px #666;
+                        transform: translateY(4px);
+                    }
+
+
+        </style>
+</head>
+<body>
+    <h1>Available Workers</h1>
+    {% if workers %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Labour ID</th>
+                    <th>Name</th>
+                    <th>Worker Type</th>
+                    <th>State</th>
+                    <th>District</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for worker in workers %}
+                    <!-- this labour's data is fetching from the Labour_data Mongodb -->
+                    <tr>
+                        <td>{{ worker.labour_id }}</td>
+                        <td>{{ worker.labour_name }}</td>
+                        <td>{{ worker.professional }}</td>
+                        <td>{{ worker.state }}</td>
+                        <td>{{ worker.district }}</td>
+                        <td>
+                            <button onclick="openModal('{{ worker.worker_id }}')">Book Worker</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No workers available for the selected criteria.</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}" class="work_reg_button">Go back to homepage</a>
+    
+    <div id="bookingModal" class="modal">
+
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <form id="bookingForm" action="{{ url_for('book') }}" method="post" enctype="multipart/form-data">
+
+                <div>
+                    <br>
+                    <h3>For User Registration</h3>
+                    <h5>If you are booking Labour Frequently - Please, Do Registration</h5>
+                    <a href="{{ url_for('user_signup') }}" class="button">signup</a>
+                </div>
+                <div>
+                    <br>
+                    <h3>For User Login</h3>
+                    <h5>If you are already registered - Please, Do Login</h5>
+                    <a href="{{ url_for('user_login') }}" class="button">login</a>
+                </div>
+                
+                <br>
+                <h3>For One Time User</h3>
+                <h5>If you required just for time being, please fill the form and update the details</h5>
+                <input type="hidden" name="register_Number" id="labour_idr">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="mobile_number">Mobile Number:</label>
+                    <input type="text" name="mobile_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email ID:</label>
+                    <input type="text" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <input type="text" name="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="addressProof">Address Proof:</label>
+                    <input type="file" name="addressProof" required>
+                </div>
+                <button type="submit" class="button">Book Worker</button>
+            </form>
+  
+        </div>
+    </div>
+
+    <script>
+        function openModal(worker_id) {
+            document.getElementById('labour_idr').value = worker_id;
+            document.getElementById('bookingModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = "none";
+        }
+    </script>
+</body>
+</html>
+
+ 
+
+

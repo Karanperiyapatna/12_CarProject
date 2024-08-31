@@ -1,0 +1,490 @@
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>User Dashboard Page</title>
+     <style>
+         .modal {
+             display: none; 
+             position: fixed; 
+             z-index: 1; 
+             padding-top: 100px; 
+             left: 0;
+             top: 0;
+             width: 100%; 
+             height: 100%; 
+             overflow: auto; 
+             background-color: rgb(0,0,0); 
+             background-color: rgba(0,0,0,0.4); 
+         }
+         .modal-content {
+             background-color: #fefefe;
+             margin: auto;
+             padding: 20px;
+             border: 1px solid #888;
+             width: 80%;
+         }
+         .close {
+             color: #aaa;
+             float: right;
+             font-size: 28px;
+             font-weight: bold;
+         }
+         .close:hover,
+         .close:focus {
+             color: black;
+             text-decoration: none;
+             cursor: pointer;
+         }
+         .work_reg_button {
+             display: inline-block;
+             padding: 10px 20px;
+             font-size: 16px;
+             cursor: pointer;
+             text-align: center;
+             text-decoration: none;
+             outline: none;
+             color: #fff;
+             background-color: #4CAF50;
+             border: none;
+             border-radius: 15px;
+             box-shadow: 0 9px #999;
+         }
+         .work_reg_button:hover {background-color: #3e8e41}
+         .work_reg_button:active {
+             background-color: #3e8e41;
+             box-shadow: 0 5px #666;
+             transform: translateY(4px);
+         }
+     </style>
+     <link rel="stylesheet" href="/static/css/user_style.css">
+     <script src="/static/js/user_script.js" defer></script>
+ </head>
+<!--  This code for SPot booking and Advance booking option -->
+<head>
+    <meta charset="UTF-8">
+    <title>Find a Worker</title>
+    <style>
+        form {
+            margin: 20px;
+        }
+        label, select {
+            margin: 10px 0;
+            display: block;
+        }
+        button {
+            margin: 10px 5px;
+            padding: 10px 15px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    
+</head>
+
+ <body>
+     {% include 'headers.html' %}
+     <link rel="stylesheet" href="path/to/style.css">
+     <script src="path/to/script.js" defer></script>
+     <div class="container">
+         <p>User ID is: {{ user_id }}</p>
+         <main>
+             <h1>User Dashboard</h1>
+             {% if booking_list %}
+             {% for order in booking_list %}
+             <div class="order-header">
+                 Order ID: {{ order.order_id }}
+             </div>
+             <div class="order-details">
+                 <table border="1">
+                     <thead>
+                         <tr>
+                             <th>Order ID</th>
+                             <th>Start Date</th>
+                             <th>End Date</th>
+                             <th>Total Number Working Days</th>
+                             <th>Labour Charge per Day</th>
+                             <th>OTP Code</th>
+                             <th>Total charge</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <tr>
+                             <td>{{ order.order_id }}</td>
+                             <td>{{ order.start_date }}</td>
+                             <td>{{ order.end_date }}</td>
+                             <td>{{ order.total_number_working_days }}</td>
+                             <td>{{ order.labour_charge }}</td>
+                             <td>{{ order.otp_code }}</td>
+                             <td>{{ order.total_charge }}</td>
+                         </tr>
+                     </tbody>
+                 </table>
+             </div>
+             {% endfor %}
+             {% else %}
+             <p>No booking data found.</p>
+             {% endif %}
+         </main>
+     </div>
+     <br>
+     <div id="bookingModal" class="modal">
+         <div class="modal-content">
+             <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+             <h2>Booking Request</h2>
+             <p>Worker ID: <span id="worker_id_display"></span></p>
+             <p>User Details: <span id="user_details">{{ user_details }}</span></p>
+             <button type="button" onclick="sendBookingRequest()">Send Request</button>
+         </div>
+     </div>
+
+     <!-- before spot booking and original code -->
+ 
+     <h1>Select the Option - Spot booking or Advance booking</h1>
+     <div class="booking-buttons">
+        <button><a href="{{ url_for('spot_booking') }}" class="button">Spot Booking</a> </button>
+        <button><a href="{{ url_for('advance_booking') }}" class="button">Advance Booking</a> </button>
+        <button><a href="{{ url_for('long_booking') }}" class="button">Long Term Booking</a> </button>
+    </div>
+    <h4>Just to display the Labour's avaibility for that professional type</h4>
+     <form id="searchForm">
+         <label for="state">State:</label>
+         <select name="state" id="state">
+             {% for state in states %}
+             <option value="{{ state }}">{{ state }}</option>
+             {% endfor %}
+         </select>
+         <label for="city">City:</label>
+         <select name="city" id="city">
+             {% for cities in cities %}
+             <option value="{{ cities }}">{{ cities }}</option>
+             {% endfor %}
+         </select>
+         <label for="worker_type">Worker Type:</label>
+         <select name="worker_type" id="worker_type">
+             {% for worker_type in worker_types %}
+             <option value="{{ worker_type }}">{{ worker_type }}</option>
+             {% endfor %}
+         </select>
+         <div id="dateInput" class="date-input">
+            <label for="booking_date">Booking Date:</label>
+            <input type="date" id="booking_date" name="booking_date">
+        </div>
+
+        <!-- <button type="button" onclick="spotBooking()">Spot Booking</button>
+        <button type="button" onclick="showDateInput()">Advance Booking</button> -->
+        <button type="button" onclick="searchWorkers()">Search</button>
+     </form>
+
+
+     <div id="searchResultsModal" class="modal">
+         <div class="modal-content">
+             <span class="close" onclick="closeModal('searchResultsModal')">&times;</span>
+             <h2>Available Workers</h2>
+             <div id="searchResults"></div>
+         </div>
+     </div>
+
+     
+     <div id="bookingModal" class="modal">
+         <div class="modal-content">
+             <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+             <h2>Booking Request</h2>
+             <p>Worker ID: <span id="worker_id_display"></span></p>
+             <p>User Details: <span id="user_details"></span></p>
+             <button type="button" onclick="sendBookingRequest()">Send Request</button>
+         </div>
+     </div>
+     <script>
+         // Existing functions here...
+ 
+         function searchWorkers() {
+             const form = document.getElementById('searchForm');
+             const formData = new FormData(form);
+             fetch('{{ url_for("workers") }}', {
+                 method: 'POST',
+                 body: formData
+             })
+             .then(response => response.json())
+             .then(data => {
+                 const searchResults = document.getElementById('searchResults');
+                 searchResults.innerHTML = '';
+                 if (data.workers && data.workers.length > 0) {
+                     let table = document.createElement('table');
+                     table.border = '1';
+                     let thead = document.createElement('thead');
+                     let headerRow = document.createElement('tr');
+                     ['Labour ID', 'Name', 'Worker Type', 'State', 'City', 'Action'].forEach(text => {
+                         let th = document.createElement('th');
+                         th.textContent = text;
+                         headerRow.appendChild(th);
+                     });
+                     thead.appendChild(headerRow);
+                     table.appendChild(thead);
+                     let tbody = document.createElement('tbody');
+                     data.workers.forEach(worker => {
+                         if (worker.is_active && isWorkerActiveOnDate(worker.status_dates, new Date().toISOString().split('T')[0])) {
+                             let row = document.createElement('tr');
+                             ['labour_id', 'labour_name', 'professional', 'state', 'city'].forEach(key => {
+                                 let td = document.createElement('td');
+                                 td.textContent = worker[key];
+                                 row.appendChild(td);
+                             });
+                             let actionTd = document.createElement('td');
+                             let button = document.createElement('button');
+                             button.textContent = 'Send Request';
+                             button.onclick = () => openBookingModal(worker.labour_id);
+                             actionTd.appendChild(button);
+                             row.appendChild(actionTd);
+                             tbody.appendChild(row);
+                         }
+                     });
+                     table.appendChild(tbody);
+                     searchResults.appendChild(table);
+                 } else {
+                     searchResults.textContent = 'No workers available for the selected criteria.';
+                 }
+                 document.getElementById('searchResultsModal').style.display = 'block';
+             })
+             .catch(error => console.error('Error:', error));
+         }
+ 
+         function openBookingModal(labour_id) {
+             document.getElementById('worker_id_display').textContent = labour_id;
+             document.getElementById('user_details').textContent = 'User ID: ' + '{{ user_id }}'; // Replace with actual user details
+             document.getElementById('bookingModal').style.display = 'block';
+         }
+ 
+         function sendBookingRequest() {
+             const labour_id = document.getElementById('worker_id_display').textContent;
+             const user_id = '{{ user_id }}'; // Replace with actual user ID
+             fetch('{{ url_for("send_booking_request") }}', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json'
+                 },
+
+                //  ======================================= working required date should pass and 
+                 body: JSON.stringify({ labour_id: labour_id, user_id: user_id }) 
+             })
+             .then(response => response.json())
+             .then(data => {
+                 if (data.success) {
+                     closeModal('bookingModal');
+                     alert('Booking request sent successfully.');
+                 } else {
+                     alert('Error sending booking request.');
+                 }
+             })
+             .catch(error => console.error('Error:', error));
+         }
+ 
+         function closeModal(modalId) {
+             document.getElementById(modalId).style.display = 'none';
+         }
+ 
+         function isWorkerActiveOnDate(status_dates, date) {
+             return status_dates.some(status_date => status_date.date === date && status_date.status === 5);
+         }
+     </script>
+ </body>
+ </html>
+ 
+<!-- 
+
+    ======================================== working fine, now its updating to further steps notification concept =======
+    <form id="searchForm">
+        <label for="state">State:</label>
+        <select name="state" id="state">
+            {% for state in states %}
+            <option value="{{ state }}">{{ state }}</option>
+            {% endfor %}
+        </select>
+        <label for="city">City:</label>
+        <select name="city" id="city">
+            {% for cities in city %}
+            <option value="{{ cities }}">{{ cities }}</option>
+            {% endfor %}
+        </select>
+        <label for="worker_type">Worker Type:</label>
+        <select name="worker_type" id="worker_type">
+            {% for worker_type in worker_types %}
+            <option value="{{ worker_type }}">{{ worker_type }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" onclick="searchWorkers()">Search</button>
+    </form>
+    <div id="searchResultsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('searchResultsModal')">&times;</span>
+            <h2>Available Workers</h2>
+            <div id="searchResults"></div>
+        </div>
+    </div>
+
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bookingModal')">&times;</span>
+            <h2>Book Worker</h2>
+            <form id="bookingForm" action="{{ url_for('book') }}" method="post">
+                <input type="hidden" name="worker_id" id="worker_id">
+                <div class="form-group">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" name="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" name="end_date" required>
+                </div>
+                <button type="submit">Book Worker</button>
+            </form>
+        </div>
+    </div>
+    <div>
+        <a href="{{ url_for('index') }}" class="work_reg_button">Go back to homepage</a>
+    </div>
+    <script>
+        function searchWorkers() {
+            const form = document.getElementById('searchForm');
+            const formData = new FormData(form);
+            fetch('{{ url_for("workers") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const searchResults = document.getElementById('searchResults');
+                searchResults.innerHTML = '';
+                if (data.workers && data.workers.length > 0) {
+                    let table = document.createElement('table');
+                    table.border = '1';
+                    let thead = document.createElement('thead');
+                    let headerRow = document.createElement('tr');
+                    ['Labour ID', 'Name', 'Worker Type', 'State', 'City', 'Action'].forEach(text => {
+                        let th = document.createElement('th');
+                        th.textContent = text;
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+                    let tbody = document.createElement('tbody');
+                    data.workers.forEach(worker => {
+                        if (worker.is_active && isWorkerActiveOnDate(worker.status_dates, new Date().toISOString().split('T')[0])) {
+                            let row = document.createElement('tr');
+                            ['labour_id', 'labour_name', 'professional', 'state', 'city'].forEach(key => {
+                                let td = document.createElement('td');
+                                td.textContent = worker[key];
+                                row.appendChild(td);
+                            });
+                            let actionTd = document.createElement('td');
+                            let button = document.createElement('button');
+                            button.textContent = 'Book Worker';
+                            button.onclick = () => openBookingModal(worker.labour_id);
+                            actionTd.appendChild(button);
+                            row.appendChild(actionTd);
+                            tbody.appendChild(row);
+                        }
+                    });
+                    table.appendChild(tbody);
+                    searchResults.appendChild(table);
+                } else {
+                    searchResults.textContent = 'No workers available for the selected criteria.';
+                }
+                document.getElementById('searchResultsModal').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        function isWorkerActiveOnDate(statusDates, currentDate) {
+            let isActive = false; // Default to true if no specific date status is found
+            statusDates.forEach(statusDate => {
+                if (statusDate.date === currentDate) {
+                    isActive = statusDate.status;
+                }
+            });
+            return isActive;
+        }
+        function openBookingModal(labour_id) {
+            document.getElementById('worker_id').value = labour_id;
+            document.getElementById('bookingModal').style.display = 'block';
+        }
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
+     -->
+</body>
+</html>
+
+
+<!--  
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user Dashboard</title>
+</head>
+<body>
+    
+    {% include 'headers.html' %}
+    <div>
+        <h1>User Dashboard Page</h1>
+    </div>
+    <main>
+        <h1>Find a Worker</h1>
+        <form action="{{ url_for('workers') }}" method="POST">
+            <label for="state">State:</label>
+            <select name="state" id="state">
+                {% for state in states %}
+                <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="city">City:</label>
+            <input type="text" name="city" id="city" required>
+
+            <label for="worker_type">Worker Type:</label>
+            <select name="worker_type" id="worker_type">
+                {% for worker_type in worker_types %}
+                <option value="{{ worker_type }}">{{ worker_type }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Search</button>
+        </form>
+    </main>
+</body>
+</html>
+
+
+-->

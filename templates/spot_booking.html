@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spot Booking</title>
+    <link rel="stylesheet" href="path/to/style.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            padding-top: 100px; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .work_reg_button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            outline: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+        }
+        .work_reg_button:hover {background-color: #3e8e41}
+        .work_reg_button:active {
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    </style>
+
+<style>
+    form {
+        margin: 20px;
+    }
+    label, select {
+        margin: 10px 0;
+        display: block;
+    }
+    button {
+        margin: 10px 5px;
+        padding: 10px 15px;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+    <link rel="stylesheet" href="/static/css/user_style.css">
+    <script src="/static/js/user_script.js" defer></script>
+</head>
+<body>
+    {% include 'headers.html' %}
+    <div class="container">
+        <h1>Spot Booking</h1>
+        <p>User ID: {{ user_id }}</p>
+        <form id="searchForm">
+            <label for="state">State:</label>
+            <select name="state" id="state">
+                {% for state in states %}
+                <option value="{{ state }}">{{ state }}</option>
+                {% endfor %}
+            </select>
+            <label for="city">City:</label>
+            <select name="city" id="city">
+                {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+            </select>
+            <label for="worker_type">Worker Type:</label>
+            <select name="worker_type" id="worker_type">
+                {% for worker_type in worker_types %}
+                <option value="{{ worker_type }}">{{ worker_type }}</option>
+                {% endfor %}
+            </select>
+            <label for="booking_date">Booking Date:</label>
+            <input type="date" id="booking_date" name="booking_date">
+
+            
+            <label for="num_labors">Number of Labors Required:</label>
+            <input type="number" id="num_labors" name="num_labors" min="1" value="1">
+            <button type="button" onclick="searchWorkers()">Search</button>
+        </form>
+    </div>
+
+    <div id="searchResultsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('searchResultsModal')">&times;</span>
+            <h2>Available Workers</h2>
+            <div id="searchResults"></div>
+            <button id="sendRequestButton" type="button" style="display: none;" onclick="sendBookingRequest()">Send Request to All</button>
+        </div>
+    </div>
+
+    <script>
+        let availableWorkers = [];
+
+        function searchWorkers() {
+            const form = document.getElementById('searchForm');
+            const formData = new FormData(form);
+            fetch('{{ url_for("search_workers") }}', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const searchResults = document.getElementById('searchResults');
+                searchResults.innerHTML = '';
+                availableWorkers = data.workers;
+                if (availableWorkers.length > 0) {
+                    let table = document.createElement('table');
+                    table.border = '1';
+                    let thead = document.createElement('thead');
+                    let headerRow = document.createElement('tr');
+                    ['Labour ID', 'Name', 'Worker Type', 'State', 'City'].forEach(text => {
+                        let th = document.createElement('th');
+                        th.textContent = text;
+                        headerRow.appendChild(th);
+                    });
+                    thead.appendChild(headerRow);
+                    table.appendChild(thead);
+                    let tbody = document.createElement('tbody');
+                    availableWorkers.forEach(worker => {
+                        if (worker.is_active && isWorkerActiveOnDate(worker.status_dates, new Date().toISOString().split('T')[0])) {
+                            let row = document.createElement('tr');
+                            ['labour_id', 'labour_name', 'professional', 'state', 'city'].forEach(key => {
+                                let td = document.createElement('td');
+                                td.textContent = worker[key];
+                                row.appendChild(td);
+                            });
+                            tbody.appendChild(row);
+                        }
+                    });
+                    table.appendChild(tbody);
+                    searchResults.appendChild(table);
+                    document.getElementById('sendRequestButton').style.display = 'block';
+                } else {
+                    searchResults.textContent = 'No workers available for the selected criteria.';
+                    document.getElementById('sendRequestButton').style.display = 'none';
+                }
+                document.getElementById('searchResultsModal').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function sendBookingRequest() {
+            const user_id = '{{ user_id }}';
+            fetch('{{ url_for("send_booking_request_spot") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: user_id, worker_list: availableWorkers })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeModal('searchResultsModal');
+                    alert('Booking requests sent successfully.');
+                } else {
+                    alert('Error sending booking requests.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function isWorkerActiveOnDate(statusDates, date) {
+            return statusDates.some(statusDate => statusDate.date === date && statusDate.status === 4);
+        }
+    </script>
+
+
+</body>
+</html>

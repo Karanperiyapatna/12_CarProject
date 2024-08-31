@@ -1,0 +1,5 @@
+
+car selection
+date selection - for that car avaible date should be visible
+booking details - adding to the crat
+payment methods
